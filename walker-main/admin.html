@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Administratora - Sklep</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <h1>🔐 ADMIN</h1>
+            </div>
+            <nav class="sidebar-nav">
+                <button class="nav-item active" data-module="dashboard" onclick="switchModule('dashboard')">
+                    📊 Dashboard
+                </button>
+                <button class="nav-item" data-module="products" onclick="switchModule('products')">
+                    📦 Produkty
+                </button>
+                <button class="nav-item" data-module="services" onclick="switchModule('services')">
+                    🎯 Usługi
+                </button>
+                <button class="nav-item" data-module="users" onclick="switchModule('users')">
+                    👥 Użytkownicy
+                </button>
+                <button class="nav-item" data-module="approval" onclick="switchModule('approval')">
+                    ✓ Akceptacje
+                </button>
+                <button class="nav-item" data-module="orders" onclick="switchModule('orders')">
+                    🛒 Zamówienia
+                </button>
+                <button class="nav-item" data-module="promos" onclick="switchModule('promos')">
+                    🎁 Promocje
+                </button>
+                <button class="nav-item" data-module="news" onclick="switchModule('news')">
+                    📢 Wiadomości
+                </button>
+                <button class="nav-item" data-module="vip" onclick="switchModule('vip')">
+                    ⭐ VIP
+                </button>
+                <button class="nav-item" data-module="wheel" onclick="switchModule('wheel')">
+                    🎡 Koło Fortuny
+                </button>
+                <button class="nav-item" data-module="channels" onclick="switchModule('channels')">
+                    📱 Kanały
+                </button>
+                <button class="nav-item" data-module="discounts" onclick="switchModule('discounts')">
+                    💰 Zniżki
+                </button>
+                <button class="nav-item" data-module="delivery" onclick="switchModule('delivery')">
+                    🚚 Dostawa
+                </button>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="btn-logout-admin" onclick="logoutAdmin()">Wyloguj</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Header -->
+            <header class="admin-header">
+                <h2 id="module-title">Dashboard</h2>
+                <div class="admin-header-right">
+                    <input type="text" id="search-input" placeholder="Szukaj..." class="search-box">
+                    <button class="btn-add-item" id="btn-add-item" style="display: none;" onclick="openAddModal()">+ Dodaj</button>
+                    <button class="btn-logout-admin" onclick="logoutAdmin()" style="white-space: nowrap;">Wyloguj</button>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="admin-content">
+
+                <!-- DASHBOARD MODULE -->
+                <div id="dashboard-module" class="admin-module active">
+                    <div class="dashboard-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon">📦</div>
+                            <div class="stat-info">
+                                <div class="stat-label">Produkty</div>
+                                <div class="stat-number" id="stat-products">0</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">👥</div>
+                            <div class="stat-info">
+                                <div class="stat-label">Użytkownicy</div>
+                                <div class="stat-number" id="stat-users">0</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">🛒</div>
+                            <div class="stat-info">
+                                <div class="stat-label">Zamówienia</div>
+                                <div class="stat-number" id="stat-orders">0</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">💰</div>
+                            <div class="stat-info">
+                                <div class="stat-label">Przychód</div>
+                                <div class="stat-number" id="stat-revenue">0 zł</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PRODUCTS MODULE -->
+                <div id="products-module" class="admin-module">
+                    <div class="module-header">
+                        <h3>Zarządzanie Produktami</h3>
+                        <div class="module-controls">
+                            <input type="text" id="products-search" placeholder="Szukaj produktów..." class="search-input">
+                            <button class="btn-action" onclick="openProductModal()">+ Dodaj Produkt</button>
+                        </div>
+                    </div>
+                    <div class="admin-table-wrapper">
+                        <table class="admin-table" id="products-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nazwa</th>
+                                    <th>Cena</th>
+                                    <th>Opis</th>
+                                    <th>Akcje</th>
+                                </tr>
+                            </thead>
+                            <tbody id="products-tbody">
+                                <!-- Produkty będą wstawiane tutaj -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SERVICES MODULE -->
+                <div id="services-module" class="admin-module">
+                    <div class="module-header">
+                        <h3>Zarządzanie Usługami</h3>
+                        <div class="module-controls">
+                            <button class="btn-action" onclick="openServiceModal()">+ Dodaj Usługę</button>
+                        </div>
+                    </div>
+                    <div class="admin-table-wrapper">
+                        <table class="admin-table" id="services-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nazwa</th>
+                                    <th>Cena</th>
+                                    <th>Opis</th>
+                                    <th>Akcje</th>
+                                </tr>
+                            </thead>
+                            <tbody id="services-tbody">
+                                <!-- Usługi będą wstawiane tutaj -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- USERS MODULE -->
+                <div id="users-module" class="admin-module">
+                    <div class="module-header">
+                        <h3>Zarządzanie Użytkownikami</h3>
+                        <div class="module-controls">
+                            <input type="text" id="users-search" placeholder="Szukaj użytkowników..." class="search-input">
+                        </div>
+                    </div>
+                    <div class="admin-table-wrapper">
+                        <table class="admin-table" id="users-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Email</th>
+                                    <th>Saldo</th>
+                                    <th>VIP</th>
+                                    <th>Status</th>
+                                    <th>Akcje</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-tbody">
+                                <!-- Użytkownicy będą wstawiani tutaj -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- APPROVAL MODULE -->
+                <div id="approval-module" class="admin-module">
+                    <div class="module-header">
+                        <h3>Prośby o Akceptację</h3>
+                    </div>
+                    <div id="approval-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;">
+                        <!-- Prośby będą wstawiane tutaj -->
+                    </div>
+                </div>
+
+                <!-- ORDERS MODULE -->
+                <div id="orders-module" class="admin-module">
+                    <div class="module-header">
+                        <h3>Historia Zamówień</h3>
+                        <div class="module-controls">
+                            <input type="text" id="orders-search" placeholder="Szukaj zamówień..." class="search-input">
+                        </div>
+                    </div>
+                    <div class="admin-table-wrapper">
+                        <table class="admin-table" id="orders-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Email</th>
+                                    <th>Przedmioty</th>
+                                    <th>Suma</th>
+                                    <th>Paczkomat</th>
+                                    <th>Data</th>
+                                    <th>Status</th>
+                                    <th>Akcje</th>
+                                </tr>
+                            </thead>
+                            <tbody id="orders-tbody">
+                                <!-- Zamówienia będą wstawiane tutaj -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- PROMOS MODULE -->
+                <div id="promos-module" class="admin-module">
+                    <div class="module-header">
+                        <h3>Zarządzanie Promocjami</h3>
+                        <div class="module-controls">
+                            <button class="btn-action" onclick="openPromoModal()">+ Dodaj Promocję</button>
+                        </div>
+                    </div>
+                    <div class="admin-table-wrapper">
+                        <table class="admin-table" id="promos-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Kod</th>
+                                    <th>Typ</th>
+                                    <th>Wartość</th>
+                                    <th>Ważna Do</th>
+                                    <th>Aktywna</th>
+                                    <th>Akcje</th>
+                                </tr>
+                            </thead>
+                            <tbody id="promos-tbody">
+                                <!-- Promocje będą wstawiane tutaj -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- NEWS MODULE -->
+                <div id="news-module" class="admin-module">
+                    <div class="module-header">
+                        <h3>Wiadomości</h3>
+                        <div class="module-controls">
+                            <button class="btn-action" onclick="openNewsModal()">+ Dodaj Wiadomość</button>
+                        </div>
+                    </div>
+                    <div class="admin-table-wrapper">
+                        <table class="admin-table" id="news-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Tytuł</th>
+                                    <th>Przypięta</th>
+                                    <th>Data</th>
+                                    <th>Akcje</th>
+                                </tr>
+                            </thead>
+                            <tbody id="news-tbody">
+                                <!-- Wiadomości będą wstawiane tutaj -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- VIP MODULE -->
+                <div id="vip-module" class="admin-module">
+                    <div class="module-header">
+                        <h3>Konfiguracja VIP</h3>
+                    </div>
+                    <div class="settings-panel">
+                        <div class="setting-group">
+                            <label>Cena Abonamentu VIP (zł):</label>
+                            <input type="number" id="vip-price" placeholder="50" class="input-field">
+                        </div>
+                        <div class="setting-group">
+                            <label>Opis Benefitów:</label>
+                            <textarea id="vip-description" placeholder="Darmowa reklama, dostęp do koła..." class="input-field"></textarea>
+                        </div>
+                        <div class="setting-group">
+                            <label>Benefity (zaznacz):</label>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" id="vip-benefit-ads"> Darmowa reklama produktów</label>
+                                <label><input type="checkbox" id="vip-benefit-wheel"> Dostęp do koła fortuny</label>
+                                <label><input type="checkbox" id="vip-benefit-shipping"> Darmowa dostawa</label>
+                                <label><input type="checkbox" id="vip-benefit-priority"> Priorytetowy support</label>
+                            </div>
+                        </div>
+                        <button class="btn-action" onclick="saveVIPConfig()">Zapisz Ustawienia</button>
+                    </div>
+                </div>
+
+                <!-- WHEEL MODULE -->
+                <div id="wheel-module" class="admin-module">
+                    <div class="module-header">
+                        <h3>Koło Fortuny</h3>
+                    </div>
+                    <div class="settings-panel">
+                        <div class="setting-group">
+                            <label>Koszt Kręcenia (zł):</label>
+                            <input type="number" id="wheel-cost" placeholder="20" class="input-field">
+                        </div>
+                        <button class="btn-action" onclick="openWheelRewardsModal()">Edytuj Nagrody</button>
+                        <h4>Nagrody Koła:</h4>
+                        <div class="admin-table-wrapper">
+                            <table class="admin-table" id="wheel-table">
+                                <thead>
+                                    <tr>
+                                        <th>Nazwa</th>
+                                        <th>Typ</th>
+                                        <th>Wartość</th>
+                                        <th>Prawdopodobieństwo (%)</th>
+                                        <th>Akcje</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="wheel-tbody">
+                                    <!-- Nagrody będą wstawiane tutaj -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <button class="btn-action" onclick="openAddRewardModal()">+ Dodaj Nagrodę</button>
+                        <h4>Logi Kręceń:</h4>
+                        <div class="admin-table-wrapper">
+                            <table class="admin-table" id="wheel-logs-table">
+                                <thead>
+                                    <tr>
+                                        <th>Email</th>
+                                        <th>Data</th>
+                                        <th>Koszt</th>
+                                        <th>Wynik</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="wheel-logs-tbody">
+                                    <!-- Logi będą wstawiane tutaj -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHANNELS MODULE -->
+                <div id="channels-module" class="admin-module">
+                    <div class="module-header">
+                        <h3>Kanały Social</h3>
+                        <div class="module-controls">
+                            <button class="btn-action" onclick="openChannelModal()">+ Dodaj Kanał</button>
+                        </div>
+                    </div>
+                    <div class="admin-table-wrapper">
+                        <table class="admin-table" id="channels-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nazwa</th>
+                                    <th>URL</th>
+                                    <th>Ikona</th>
+                                    <th>Akcje</th>
+                                </tr>
+                            </thead>
+                            <tbody id="channels-tbody">
+                                <!-- Kanały będą wstawiane tutaj -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- DISCOUNTS MODULE -->
+                <div id="discounts-module" class="admin-module">
+                    <div class="module-header">
+                        <h3>Zniżki Indywidualne</h3>
+                        <div class="module-controls">
+                            <button class="btn-action" onclick="openDiscountModal()">+ Dodaj Zniżkę</button>
+                        </div>
+                    </div>
+                    <div class="admin-table-wrapper">
+                        <table class="admin-table" id="discounts-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Email</th>
+                                    <th>Typ</th>
+                                    <th>Wartość</th>
+                                    <th>Ważna Do</th>
+                                    <th>Akcje</th>
+                                </tr>
+                            </thead>
+                            <tbody id="discounts-tbody">
+                                <!-- Zniżki będą wstawiane tutaj -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- DELIVERY MODULE -->
+                <div id="delivery-module" class="admin-module">
+                    <div class="module-header">
+                        <h3>Ustawienia Dostawy</h3>
+                    </div>
+                    <div class="settings-panel">
+                        <div class="setting-group">
+                            <label>Cena Dostawy Kurier (zł):</label>
+                            <input type="number" id="delivery-price" placeholder="20" class="input-field">
+                        </div>
+                        <div class="setting-group">
+                            <label>Cena Dostawy Paczkomat (zł):</label>
+                            <input type="number" id="locker-price" placeholder="20" class="input-field">
+                        </div>
+                        <div class="setting-group">
+                            <label><input type="checkbox" id="paczkomaty-enabled"> Włącz Paczkomaty InPost</label>
+                        </div>
+                        <button class="btn-action" onclick="saveDeliveryConfig()">Zapisz Ustawienia</button>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL: Add/Edit Item -->
+    <div id="modal-edit-item" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h3 id="modal-title">Edytuj Element</h3>
+            <form id="form-edit-item">
+                <!-- User Edit Form -->
+                <div id="user-form-fields" style="display: none;">
+                    <input type="hidden" id="edit-user-id">
+                    <div class="setting-group">
+                        <label>Email:</label>
+                        <input type="email" id="edit-user-email" class="input-field" placeholder="Email">
+                    </div>
+                    <div class="setting-group">
+                        <label>Imię:</label>
+                        <input type="text" id="edit-user-name" class="input-field" placeholder="Imię">
+                    </div>
+                    <div class="setting-group">
+                        <label>Saldo:</label>
+                        <input type="number" id="edit-user-balance" class="input-field" placeholder="Saldo">
+                    </div>
+                </div>
+
+                <!-- Product Edit Form -->
+                <div id="product-form-fields" style="display: none;">
+                    <input type="hidden" id="edit-product-id">
+                    <div class="setting-group">
+                        <label>Nazwa:</label>
+                        <input type="text" id="edit-product-name" class="input-field" placeholder="Nazwa produktu">
+                    </div>
+                    <div class="setting-group">
+                        <label>Cena:</label>
+                        <input type="number" id="edit-product-price" class="input-field" placeholder="Cena">
+                    </div>
+                    <div class="setting-group">
+                        <label>Opis:</label>
+                        <textarea id="edit-product-desc" class="input-field" placeholder="Opis produktu"></textarea>
+                    </div>
+                </div>
+
+                <button type="button" class="btn-action" onclick="saveItem()">Zapisz</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: View Order Details -->
+    <div id="modal-order-details" class="modal">
+        <div class="modal-content modal-large">
+            <span class="close-btn" onclick="closeOrderModal()">&times;</span>
+            <h3>Szczegóły Zamówienia</h3>
+            <div id="order-details-content">
+                <!-- Szczegóły będą wstawiane tutaj -->
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>
