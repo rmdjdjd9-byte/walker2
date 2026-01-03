@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sklep Internetowy</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Overlay Animacji Wideo -->
+    <div id="animation-overlay" class="animation-overlay">
+        <video id="animation-video" class="animation-video" autoplay muted playsinline preload="metadata">
+            <source src="animacja.mp4" type="video/mp4">
+        </video>
+        <div class="animation-spinner"></div>
+    </div>
+
+    <!-- Modal Szczegółów Produktu -->
+    <div id="product-modal" class="modal">
+        <div class="modal-content modal-product">
+            <span class="close-btn" onclick="closeProductModal()">&times;</span>
+            <div class="product-modal-body">
+                <img id="modal-product-image" src="" alt="Produkt" class="modal-product-image">
+                <div class="product-modal-info">
+                    <h2 id="modal-product-name"></h2>
+                    <p id="modal-product-description"></p>
+                    <div class="modal-product-price-section">
+                        <span class="modal-product-price" id="modal-product-price"></span>
+                        <button id="modal-add-btn" class="btn-submit" onclick="addToCartFromModal()">Dodaj do koszyka</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Logowania/Rejestracji -->
+    <div id="auth-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeAuthModal()">&times;</span>
+            <div class="modal-tabs">
+                <button class="tab-btn active" onclick="switchTab('login')">Logowanie</button>
+                <button class="tab-btn" onclick="switchTab('register')">Rejestracja</button>
+            </div>
+
+            <!-- Formularz Logowania -->
+            <div id="login-tab" class="tab-content active">
+                <h2>Zaloguj się</h2>
+                <input type="email" id="login-email" placeholder="Email" class="input-field">
+                <input type="password" id="login-password" placeholder="Hasło" class="input-field">
+                <button onclick="login()" class="btn-submit">Zaloguj</button>
+            </div>
+
+            <!-- Formularz Rejestracji -->
+            <div id="register-tab" class="tab-content">
+                <h2>Zarejestruj się</h2>
+                <input type="email" id="register-email" placeholder="Email" class="input-field">
+                <input type="password" id="register-password" placeholder="Hasło" class="input-field">
+                <input type="password" id="register-password-confirm" placeholder="Powtórz hasło" class="input-field">
+                <button onclick="register()" class="btn-submit">Zarejestruj</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Kontaktu -->
+    <div id="contact-modal" class="modal">
+        <div class="modal-content modal-contact">
+            <span class="close-btn" onclick="closeContactModal()">&times;</span>
+            <h2>Kontakt</h2>
+            <div class="contact-list">
+                <a href="https://t.me/johnnyazq" target="_blank" class="contact-btn contact-telegram">
+                    <span>📱 Telegram</span>
+                    <span class="contact-link">T.me/johnnyazq</span>
+                </a>
+                <a href="https://signal.me/#eu/FwhS5sCLy5o6UDEaOPP-32foCfvKxQffFA2fS3NDUyAO2mSbWllAn6l-po6B2Nid" target="_blank" class="contact-btn contact-signal">
+                    <span>🔒 Signal</span>
+                    <span class="contact-link">Signal Messenger</span>
+                </a>
+                <div class="contact-info contact-zangi">
+                    <span>💳 Zangi</span>
+                    <span class="contact-link">1087081264</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Doładowania Salda -->
+    <div id="reload-modal" class="modal">
+        <div class="modal-content modal-reload">
+            <span class="close-btn" onclick="closeReloadModal()">&times;</span>
+            <h2>Doładuj Saldo</h2>
+            <p>Aktualne saldo: <strong id="reload-balance">0.00 zł</strong></p>
+            <div class="amount-options">
+                <button onclick="selectAmount(50)" class="amount-btn">50 zł</button>
+                <button onclick="selectAmount(100)" class="amount-btn">100 zł</button>
+                <button onclick="selectAmount(200)" class="amount-btn">200 zł</button>
+                <button onclick="selectAmount(500)" class="amount-btn">500 zł</button>
+            </div>
+            <a href="admin.html" style="display: none;" id="admin-link"></a>
+            <p>Lub wpisz kwotę:</p>
+            <div class="custom-amount">
+                <input type="number" id="custom-amount" placeholder="Wpisz kwotę" min="1">
+                <button onclick="reloadCustom()" class="btn-submit">Doładuj</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Powiadomienia o Rejestracji -->
+    <div id="registration-approval-modal" class="modal">
+        <div class="modal-content modal-registration-approval">
+            <h2>✉️ Prośba Wysłana</h2>
+            <div style="text-align: center; padding: 30px 20px;">
+                <p style="font-size: 18px; margin-bottom: 20px;">Twoja prośba o zatwierdzenie konta została wysłana!</p>
+                <p style="font-size: 14px; color: #888; margin-bottom: 30px;">Administrator przegląda nowe rejestracje. Spróbuj zalogować się za chwilę lub wróć na stronę później.</p>
+                <button onclick="closeRegistrationApprovalModal()" class="btn-submit" style="width: 100%;">Zamknij</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Realizacji Zamówienia -->
+    <div id="checkout-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeCheckoutModal()">&times;</span>
+            <h2>Realizuj Zamówienie</h2>
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" id="checkout-email" placeholder="Twój email">
+            </div>
+            <div class="form-group">
+                <label>Numer Paczkomatu:</label>
+                <input type="text" id="checkout-paczkomat" placeholder="np. WAW123456">
+            </div>
+            <button class="btn-submit" onclick="submitCheckout()">Potwierdź Zamówienie</button>
+        </div>
+    </div>
+
+    <!-- Strona (ukryta na początek) -->
+    <div id="page-content" class="page-content">
+        <div class="container">
+            <header>
+                <div class="header-left-col">
+                    <div class="balance-display" id="balance-display">
+                        💰 Saldo: <span id="header-balance">0.00</span> zł
+                    </div>
+                    <button onclick="openReloadModal()" class="btn-reload-header">💚 Doładuj</button>
+                </div>
+                <div class="header-center-col">
+                    <img src="logo.jpg" alt="Logo" class="logo" style="height: 90px;">
+                    <button onclick="openContactModal()" class="btn-contact-header">📞 Kontakt</button>
+                </div>
+                <div class="header-right-col">
+                    <button onclick="toggleCart()" class="btn-cart-header">
+                        🛒 <span id="cart-count">0</span>
+                    </button>
+                    <div class="auth-buttons" id="auth-buttons">
+                        <button onclick="openAuthModal()" class="btn-auth">Logowanie</button>
+                    </div>
+                    <div class="user-section" id="user-section" style="display: none;">
+                        <div class="user-info">
+                            <span id="user-name">Użytkownik</span>
+                        </div>
+                        <button onclick="openReloadModal()" class="btn-reload">Doładuj</button>
+                    </div>
+                    <button onclick="logout()" class="btn-logout" id="logout-btn" style="display: none;">Wyloguj</button>
+                    
+                    <!-- Panel Koszyka Dropdown -->
+                    <div id="cart-panel" class="cart-panel" style="display: none;">
+                        <div class="cart-header">
+                            <h2>Koszyk</h2>
+                            <span class="close-cart" onclick="toggleCart()">&times;</span>
+                        </div>
+                        <div id="cart-items" class="cart-items">
+                            <!-- Produkty w koszyku będą tutaj -->
+                        </div>
+                        <div class="cart-footer">
+                            <div class="cart-total">Razem: <span id="cart-total">0.00</span> zł</div>
+                            <button class="btn-checkout" onclick="openCheckoutModal()">Realizuj zamówienie</button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main>
+                <div class="products-grid" id="products-grid">
+                    <!-- Produkty będą wstawione tutaj przez JavaScript -->
+                </div>
+
+                <!-- SEKCJA NOWOŚCI -->
+                <section class="news-section">
+                    <div class="section-header">
+                        <h2>📰 Nowości</h2>
+                        <p class="section-subtitle">Najnowsze informacje i wiadomości ze sklepu</p>
+                    </div>
+                    <div class="news-grid" id="news-grid">
+                        <!-- Nowości będą wstawione tutaj przez JavaScript -->
+                    </div>
+                </section>
+
+                <!-- SEKCJA STATUS VIP -->
+                <section class="vip-status-section">
+                    <div class="section-header">
+                        <h2>👑 Status VIP</h2>
+                        <p class="section-subtitle">Specjalne benefity i przywileje</p>
+                    </div>
+                    <div class="vip-status-card" id="vip-status-card">
+                        <div class="vip-badge">
+                            <span class="vip-label">STANDARDOWY</span>
+                        </div>
+                        <div class="vip-benefits">
+                            <div class="benefit-item">
+                                <span class="benefit-icon">🚚</span>
+                                <span class="benefit-text">Darmowa wysyłka</span>
+                            </div>
+                            <div class="benefit-item">
+                                <span class="benefit-icon">🎡</span>
+                                <span class="benefit-text">Darmowe spin kołem (1x/tydzień)</span>
+                            </div>
+                            <div class="benefit-item">
+                                <span class="benefit-icon">🎁</span>
+                                <span class="benefit-text">Bonus do paczki (>500 zł)</span>
+                            </div>
+                        </div>
+                        <button class="btn-vip-upgrade">Uaktualnij na VIP →</button>
+                    </div>
+                </section>
+
+                <!-- SEKCJA KOŁO FORTUNY -->
+                <section class="wheel-section">
+                    <div class="section-header">
+                        <h2>🎡 Koło Fortuny</h2>
+                        <p class="section-subtitle">Spróbuj swojego szczęścia i wygrywaj nagrody!</p>
+                    </div>
+                    <div class="wheel-container">
+                        <div class="wheel-info">
+                            <div class="wheel-cost">
+                                <span class="cost-label">Koszt kręcenia:</span>
+                                <span class="cost-value">20 zł</span>
+                            </div>
+                            <div class="wheel-spins-remaining" id="wheel-spins">
+                                <span class="spins-label">Darmowe spin (VIP):</span>
+                                <span class="spins-value" id="spins-value">0</span>
+                            </div>
+                        </div>
+                        <div class="wheel-game">
+                            <div class="wheel-wrapper">
+                                <div class="wheel" id="wheel">
+                                    <!-- Segmenty koła zostaną wygenerowane przez JS -->
+                                </div>
+                                <div class="wheel-pointer"></div>
+                            </div>
+                            <button class="btn-spin" id="spin-btn" onclick="spinWheel()">KRĘĆ!</button>
+                            <div class="wheel-result" id="wheel-result" style="display: none;">
+                                <p>Wygrałeś: <strong id="wheel-prize"></strong>!</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SEKCJA KANAŁY TELEGRAM -->
+                <section class="telegram-section">
+                    <div class="section-header">
+                        <h2>💬 Dołącz do Naszych Kanałów</h2>
+                        <p class="section-subtitle">Bądź na bieżąco z najnowszymi informacjami i ofertami</p>
+                    </div>
+                    <div class="telegram-channels">
+                        <a href="https://t.me/+80p6_PcZhJNkYjk0" target="_blank" class="telegram-card">
+                            <div class="telegram-icon">📢</div>
+                            <h3>Główny Kanał</h3>
+                            <p>Świeże oferty, promocje i wiadomości</p>
+                            <span class="btn-join">Dołącz →</span>
+                        </a>
+                        <a href="https://t.me/c/3186812708/5" target="_blank" class="telegram-card">
+                            <div class="telegram-icon">⭐</div>
+                            <h3>Opinie</h3>
+                            <p>Przeczytaj opinie innych klientów</p>
+                            <span class="btn-join">Dołącz →</span>
+                        </a>
+                        <a href="https://t.me/c/3186812708/5" target="_blank" class="telegram-card">
+                            <div class="telegram-icon">💬</div>
+                            <h3>Talk Chat</h3>
+                            <p>Dyskusja i bezpośrednia komunikacja</p>
+                            <span class="btn-join">Dołącz →</span>
+                        </a>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
